@@ -1,0 +1,14 @@
+title: "{{ title }}"
+platform: "{{ platform }}"
+problem_id: "{{ problem_id }}"
+problem_url: "{{ problem_url }}"
+difficulty: "{{ difficulty }}"
+topics: []
+status: "draft"
+language: "python3"
+contest:
+  type: "{{ contest_type }}"
+  id: "{{ contest_id }}"
+canonical_editorial: "README.md"
+solution: "solution.py"
+tests: "tests.py"
