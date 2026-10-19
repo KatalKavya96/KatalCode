@@ -20,7 +20,7 @@ This repository favors understanding over answer collection. Every complete edit
 
 ## Visual Lab
 
-The [`dist/`](./dist/) site turns editorials into a responsive, comic-inspired reading experience with interactive simulations. The first issue includes an editable directional grid and an animated colored-tree edge-orientation lab.
+The [`dist/`](./dist/) site lets readers choose LeetCode, Codeforces, or CodeChef, then browse documented contests and questions. Questions include concise visual explanations and interactive simulations where available. The current archive has two questions from LeetCode Weekly Contest 524; empty platform archives are shown honestly rather than listing undocumented contests.
 
 Run it locally with no dependencies:
 
@@ -28,7 +28,7 @@ Run it locally with no dependencies:
 python3 -m http.server 8000 --directory dist
 ```
 
-Then open `http://localhost:8000`. The same static build is ready for GitHub Pages and OpenAI Sites.
+Then open `http://localhost:8000`. GitHub Pages publishes `dist/`. For Vercel, import this repository with the repository root as the Root Directory; [`vercel.json`](./vercel.json) selects the static `dist/` output and the Other framework preset. No build command is needed.
 
 ## Featured visual editorials
 
