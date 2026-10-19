@@ -334,3 +334,188 @@ treeResetButton.addEventListener("click", resetTreeState);
 resetTreeState();
 
 document.querySelector("#year").textContent = new Date().getFullYear();
+
+const catalog = window.KATALCODE_CATALOG;
+const views = [...document.querySelectorAll("[data-view]")];
+const platformGrid = document.querySelector("#platform-grid");
+const contestList = document.querySelector("#contest-list");
+const questionList = document.querySelector("#question-list");
+const searchInput = document.querySelector("#contest-search");
+const chapterTabs = [...document.querySelectorAll("[data-chapter]")];
+const chapterPanels = [...document.querySelectorAll("[data-chapter-panel]")];
+let activePlatform = "leetcode";
+
+function element(tag, className, content) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (content !== undefined) node.textContent = content;
+  return node;
+}
+
+function link(className, label, href) {
+  const node = element("a", className, label);
+  node.href = href;
+  return node;
+}
+
+function platformHref(platformId) {
+  return `#platform/${platformId}`;
+}
+
+function contestHref(platformId, contestId) {
+  return `#contest/${platformId}/${contestId}`;
+}
+
+function problemHref(platformId, contestId, problemId) {
+  return `#problem/${platformId}/${contestId}/${problemId}`;
+}
+
+function showView(name) {
+  views.forEach((view) => { view.hidden = view.dataset.view !== name; });
+}
+
+function renderPlatforms() {
+  platformGrid.replaceChildren();
+  Object.entries(catalog).forEach(([id, platform]) => {
+    const card = link(`platform-card platform-${id}`, "", platformHref(id));
+    const count = platform.contests.length;
+    const head = element("div", "platform-card-head");
+    head.append(element("span", "platform-monogram", platform.initials), element("span", "platform-count", `${count} ${count === 1 ? "contest" : "contests"}`));
+    card.append(head, element("h3", "", platform.name), element("p", "", platform.description), element("span", "platform-cta", "Browse contests →"));
+    platformGrid.append(card);
+  });
+}
+
+function renderContestList() {
+  const platform = catalog[activePlatform];
+  const search = searchInput.value.trim().toLowerCase();
+  const contests = platform.contests.filter((contest) => `${contest.title} ${contest.type} ${contest.date}`.toLowerCase().includes(search));
+  contestList.replaceChildren();
+  if (platform.contests.length === 0) {
+    const empty = element("div", "empty-state");
+    empty.append(element("h2", "", "No contests documented yet"), element("p", "", `${platform.name} editorials will appear here when they are added to the archive.`), link("button button-primary", `Browse ${platform.name} contests ↗`, platform.archiveUrl), link("button button-ghost", "Choose another platform", "#home"));
+    contestList.append(empty);
+    return;
+  }
+  if (contests.length === 0) {
+    contestList.append(element("p", "empty-search", "No contests match your search."));
+    return;
+  }
+  contests.forEach((contest) => {
+    const row = link("contest-row", "", contestHref(activePlatform, contest.id));
+    const main = element("div", "contest-row-main");
+    main.append(element("span", "row-eyebrow", `${contest.type} · ${contest.date}`), element("h2", "", contest.title), element("p", "", contest.summary));
+    row.append(main, element("span", "row-count", `${contest.problems.length} ${contest.problems.length === 1 ? "question" : "questions"}`), element("span", "row-arrow", "→"));
+    contestList.append(row);
+  });
+}
+
+function renderPlatform(platformId) {
+  activePlatform = platformId;
+  const platform = catalog[platformId];
+  document.querySelector("#platform-badge").textContent = platform.initials;
+  document.querySelector("#platform-name").textContent = platform.name;
+  document.querySelector("#platform-description").textContent = platform.description;
+  document.querySelector("#platform-kicker").textContent = "PLATFORM ARCHIVE";
+  document.querySelector("#contest-count").textContent = `${platform.contests.length} ${platform.contests.length === 1 ? "contest" : "contests"}`;
+  const questions = platform.contests.reduce((count, contest) => count + contest.problems.length, 0);
+  document.querySelector("#problem-count").textContent = `${questions} ${questions === 1 ? "question" : "questions"}`;
+  searchInput.value = "";
+  searchInput.closest("label").hidden = platform.contests.length === 0;
+  renderContestList();
+  showView("platform");
+  document.title = `${platform.name} contests · KatalCode`;
+}
+
+function renderContest(platformId, contest) {
+  const platform = catalog[platformId];
+  document.querySelector("#contest-back").href = platformHref(platformId);
+  document.querySelector("#contest-kicker").textContent = `${platform.name.toUpperCase()} · ${contest.type.toUpperCase()}`;
+  document.querySelector("#contest-title").textContent = contest.title;
+  document.querySelector("#contest-summary").textContent = contest.summary;
+  document.querySelector("#contest-meta").textContent = `${contest.date} · ${contest.problems.length} documented questions`;
+  questionList.replaceChildren();
+  contest.problems.forEach((problem) => {
+    const row = link("question-row", "", problemHref(platformId, contest.id, problem.id));
+    row.append(element("span", "question-number", problem.number));
+    const main = element("div", "question-row-main");
+    main.append(element("span", "row-eyebrow", `${problem.platformId} · ${problem.pattern}`), element("h2", "", problem.title), element("p", "", problem.summary));
+    row.append(main, element("span", "difficulty", problem.difficulty), element("span", "row-arrow", "→"));
+    questionList.append(row);
+  });
+  showView("contest");
+  document.title = `${contest.title} · KatalCode`;
+}
+
+function selectChapter(chapter) {
+  chapterTabs.forEach((tab) => {
+    const selected = tab.dataset.chapter === chapter;
+    tab.classList.toggle("active", selected);
+    tab.setAttribute("aria-selected", String(selected));
+  });
+  chapterPanels.forEach((panel) => { panel.hidden = panel.dataset.chapterPanel !== chapter; });
+}
+
+function renderProblem(platformId, contest, problem) {
+  const platform = catalog[platformId];
+  document.querySelector("#problem-back").href = contestHref(platformId, contest.id);
+  document.querySelector("#problem-kicker").textContent = `${platform.name.toUpperCase()} ${problem.platformId} · ${contest.title.toUpperCase()} · ${problem.number}`;
+  document.querySelector("#problem-title").textContent = problem.title;
+  document.querySelector("#problem-summary").textContent = problem.summary;
+  document.querySelector("#problem-difficulty").textContent = problem.difficulty;
+  document.querySelector("#source-editorial").href = `https://github.com/KatalKavya96/KatalCode/blob/main/${problem.source}`;
+  document.querySelector("#learn-title").textContent = problem.storyTitle;
+  document.querySelector("#learn-intro").textContent = problem.intro;
+  document.querySelector("#key-insight").textContent = problem.insight;
+  const sequence = document.querySelector("#comic-sequence");
+  sequence.replaceChildren();
+  problem.panels.forEach(([label, heading, body], index) => {
+    const panel = element("article", `comic-panel${index === 1 ? " accent-panel" : ""}${index === 2 ? " dark-panel" : ""}`);
+    panel.append(element("span", "panel-index", String(index + 1)), element("p", "narration", label), element("h3", "", heading), element("p", "", body));
+    sequence.append(panel);
+  });
+  const takeaways = document.querySelector("#takeaway-grid");
+  takeaways.replaceChildren();
+  problem.takeaways.forEach((takeaway, index) => {
+    const card = element("article", "takeaway-card");
+    card.append(element("span", "", String(index + 1).padStart(2, "0")), element("p", "", takeaway));
+    takeaways.append(card);
+  });
+  document.querySelector("#grid-simulator").hidden = problem.simulator !== "grid";
+  document.querySelector("#tree-simulator").hidden = problem.simulator !== "tree";
+  stopGridPlayback();
+  stopTreePlayback();
+  selectChapter("learn");
+  showView("problem");
+  document.title = `${problem.title} · KatalCode`;
+}
+
+function navigate() {
+  const hash = decodeURIComponent(window.location.hash.slice(1));
+  const parts = hash.split("/");
+  const [page, platformId, contestId, problemId] = parts;
+  const platform = catalog[platformId];
+  const contest = platform?.contests.find((item) => item.id === contestId);
+  const problem = contest?.problems.find((item) => item.id === problemId);
+
+  if (page === "platform" && platform && parts.length === 2) renderPlatform(platformId);
+  else if (page === "contest" && contest && parts.length === 3) renderContest(platformId, contest);
+  else if (page === "problem" && problem && parts.length === 4) renderProblem(platformId, contest, problem);
+  else {
+    showView("home");
+    document.title = "KatalCode — Visual Algorithm Archive";
+  }
+
+  if (hash === "platforms") document.querySelector("#platforms").scrollIntoView();
+  else window.scrollTo(0, 0);
+}
+
+renderPlatforms();
+document.querySelector(".skip-link").addEventListener("click", (event) => {
+  event.preventDefault();
+  document.querySelector("#content").focus();
+});
+searchInput.addEventListener("input", renderContestList);
+chapterTabs.forEach((tab) => tab.addEventListener("click", () => selectChapter(tab.dataset.chapter)));
+window.addEventListener("hashchange", navigate);
+navigate();

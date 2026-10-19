@@ -3,239 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="KatalCode Visual Lab — comic-style algorithm editorials and interactive simulations."
-    />
+    <meta name="description" content="KatalCode — a visual DSA and competitive programming archive." />
     <meta name="theme-color" content="#f7f1df" />
-    <title>KatalCode Visual Lab</title>
+    <title>KatalCode — Visual Algorithm Archive</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./catalog.js" defer></script>
     <script src="./app.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to the story</a>
-
+    <a class="skip-link" href="#content">Skip to content</a>
     <header class="topbar">
-      <a class="brand" href="#home" aria-label="KatalCode Visual Lab home">
-        <span class="brand-mark" aria-hidden="true">K</span>
-        <span>
-          <strong>KatalCode</strong>
-          <small>VISUAL LAB</small>
-        </span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="#library">Library</a>
-        <a href="#grid-lab">Grid Lab</a>
-        <a href="#tree-lab">Tree Lab</a>
-        <a href="https://github.com/KatalKavya96/KatalCode">GitHub ↗</a>
-      </nav>
+      <a class="brand" href="#home" aria-label="KatalCode home"><span class="brand-mark" aria-hidden="true">K</span><span><strong>KatalCode</strong><small>VISUAL ARCHIVE</small></span></a>
+      <nav aria-label="Primary navigation"><a href="#platform/leetcode">LeetCode</a><a href="#platform/codeforces">Codeforces</a><a href="#platform/codechef">CodeChef</a><a href="https://github.com/KatalKavya96/KatalCode">GitHub ↗</a></nav>
     </header>
 
-    <main id="main">
-      <section class="hero" id="home">
-        <div class="hero-copy">
-          <p class="eyebrow"><span>ISSUE 001</span> / WEEKLY CONTEST 524</p>
-          <h1>Algorithms you can <em>see</em>,<br />stories you can <em>run</em>.</h1>
-          <p class="lede">
-            Enter the visual notebook of Kavya Katal—where brute force meets its bottleneck,
-            observations become superpowers, and every optimized solution earns its ending.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#grid-lab">Start reading</a>
-            <a class="button button-ghost" href="#how-it-works">How it works</a>
+    <main id="content" tabindex="-1">
+      <section class="view home-view" data-view="home">
+        <div class="hero">
+          <div class="hero-copy">
+            <h1>Choose a platform</h1>
+            <p class="lede">Browse contests, open a question, and learn by simulation.</p>
           </div>
-          <ul class="signal-row" aria-label="Site qualities">
-            <li>Interactive</li>
-            <li>Beginner-friendly</li>
-            <li>Proof-driven</li>
-          </ul>
         </div>
 
-        <div class="hero-art" aria-label="A comic panel about finding an algorithmic insight">
-          <div class="halftone" aria-hidden="true"></div>
-          <div class="speech speech-left">The simulation works…<br /><strong>but why is it slow?</strong></div>
-          <div class="hero-symbol" aria-hidden="true">
-            <span class="symbol-ring"></span>
-            <span class="symbol-core">O(n)</span>
-          </div>
-          <div class="speech speech-right">Look at what every attempt<br /><strong>keeps rediscovering!</strong></div>
-          <p class="panel-caption">THE OBSERVATION CHANGES EVERYTHING.</p>
+        <section class="platform-section" id="platforms" aria-label="Platforms">
+          <div class="platform-grid" id="platform-grid"></div>
+        </section>
+
+      </section>
+
+      <section class="view archive-view" data-view="platform" hidden>
+        <div class="page-shell">
+          <a class="back-link" href="#home">← All platforms</a>
+          <div class="archive-hero"><div class="platform-badge" id="platform-badge">LC</div><div><p class="eyebrow" id="platform-kicker">PLATFORM ARCHIVE</p><h1 id="platform-name">LeetCode</h1><p id="platform-description"></p></div></div>
+          <div class="archive-toolbar"><div><span id="contest-count">0 contests</span><span id="problem-count">0 questions</span></div><label>Filter contests <input id="contest-search" type="search" placeholder="Search by contest or number…" /></label></div>
+          <div class="contest-list" id="contest-list"></div>
         </div>
       </section>
 
-      <section class="manifesto" id="how-it-works" aria-labelledby="method-title">
-        <div>
-          <p class="eyebrow">THE KATALCODE METHOD</p>
-          <h2 id="method-title">No teleporting to the clever answer.</h2>
+      <section class="view contest-view" data-view="contest" hidden>
+        <div class="page-shell">
+          <a class="back-link" id="contest-back" href="#home">← Platform archive</a>
+          <div class="contest-heading"><p class="eyebrow" id="contest-kicker">LEETCODE · WEEKLY</p><h1 id="contest-title">Weekly Contest 524</h1><p id="contest-summary"></p><div class="contest-meta" id="contest-meta"></div></div>
+          <div class="question-list" id="question-list"></div>
         </div>
-        <ol class="method-strip">
-          <li><span>01</span><strong>Intuition</strong><small>Start from the story.</small></li>
-          <li><span>02</span><strong>Brute force</strong><small>Make it correct first.</small></li>
-          <li><span>03</span><strong>Bottleneck</strong><small>Name the repeated work.</small></li>
-          <li><span>04</span><strong>Optimize</strong><small>Turn insight into code.</small></li>
-          <li><span>05</span><strong>Prove</strong><small>Know why it holds.</small></li>
-        </ol>
       </section>
 
-      <section class="library section-shell" id="library" aria-labelledby="library-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">CURRENT SHELF</p>
-            <h2 id="library-title">Weekly Contest 524</h2>
+      <section class="view problem-view" data-view="problem" hidden>
+        <div class="page-shell problem-shell">
+          <a class="back-link" id="problem-back" href="#home">← Contest</a>
+          <header class="problem-header"><div><p class="eyebrow" id="problem-kicker">LEETCODE 4084 · Q2</p><h1 id="problem-title">Last Visited Cell</h1><p id="problem-summary"></p></div><div class="problem-actions"><span class="difficulty" id="problem-difficulty">Medium</span><a class="button button-ghost" id="source-editorial" href="#">Read source ↗</a></div></header>
+          <nav class="chapter-nav" aria-label="Question sections"><button class="chapter-tab active" type="button" data-chapter="learn">Learn</button><button class="chapter-tab" type="button" data-chapter="simulate">Simulate</button><button class="chapter-tab" type="button" data-chapter="takeaways">Takeaways</button></nav>
+
+          <div class="chapter" data-chapter-panel="learn">
+            <div class="story-layout"><div><p class="chapter-tag">THE STORY</p><h2 id="learn-title">The maze that remembers</h2><p class="chapter-intro" id="learn-intro"></p></div><div class="comic-sequence" id="comic-sequence"></div></div>
+            <div class="insight-break"><span class="burst">AHA!</span><p id="key-insight"></p></div>
           </div>
-          <p>Two editorials. Two simulators. One reusable way of thinking.</p>
-        </div>
-        <div class="story-cards">
-          <a class="story-card card-blue" href="#grid-lab">
-            <span class="card-number">4084 / Q2</span>
-            <div class="mini-grid" aria-hidden="true"><i>→</i><i>↓</i><i>↑</i><i>←</i></div>
-            <h3>Last Visited Cell</h3>
-            <p>Follow the arrows. Remember the past. Stop one move before disaster.</p>
-            <span class="card-link">Run the grid →</span>
-          </a>
-          <a class="story-card card-red" href="#tree-lab">
-            <span class="card-number">4085 / Q3</span>
-            <div class="mini-tree" aria-hidden="true">
-              <i class="node node-r">R</i><i class="node node-b one">B</i>
-              <i class="node node-b two">B</i><b></b><b></b>
+
+          <div class="chapter" data-chapter-panel="simulate" hidden>
+            <div class="simulator-shell" id="grid-simulator" aria-label="Directional grid simulator" hidden>
+              <div class="simulator-topline"><div><p class="eyebrow">LIVE PANEL</p><h3>Directional Grid Simulator</h3></div><span class="complexity-pill">O(mn)</span></div><p class="sim-help">Click a cell to rotate its arrow. Then step through the path.</p>
+              <div class="grid-stage"><div class="direction-grid" id="direction-grid" role="grid" aria-label="Editable direction grid"></div><aside class="state-card" aria-live="polite"><span>Current state</span><strong id="grid-status">Ready at (0, 0)</strong><dl><div><dt>Current</dt><dd id="grid-current">(0, 0)</dd></div><div><dt>Visited</dt><dd id="grid-visited">0 / 4</dd></div><div><dt>Next move</dt><dd id="grid-next">Right</dd></div></dl></aside></div>
+              <div class="controls"><button class="button button-primary" id="grid-step" type="button">Step forward</button><button class="button button-ghost" id="grid-play" type="button">Auto play</button><button class="icon-button" id="grid-reset" type="button">↺ Reset</button></div><div class="timeline" aria-label="Simulation progress"><span id="grid-progress"></span></div>
             </div>
-            <h3>Root of a Colored Tree</h3>
-            <p>Let color orient every edge, then find the only node with no parent.</p>
-            <span class="card-link">Orient the tree →</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="lab lab-grid" id="grid-lab" aria-labelledby="grid-title">
-        <div class="lab-story">
-          <p class="chapter-tag">CHAPTER 01 · SIMULATION</p>
-          <h2 id="grid-title">The maze that remembers</h2>
-          <p class="chapter-intro">
-            Every square points to the next. Our traveler stops when the next step leaves the
-            board or enters a square already seen.
-          </p>
-
-          <div class="comic-sequence">
-            <article class="comic-panel">
-              <span class="panel-index">1</span>
-              <p class="narration">First thought</p>
-              <h3>“Just follow the arrows.”</h3>
-              <p>The route is deterministic, so simulation is exactly the right instinct.</p>
-            </article>
-            <article class="comic-panel accent-panel">
-              <span class="panel-index">2</span>
-              <p class="narration">The trap</p>
-              <h3>“Have I been here before?”</h3>
-              <p>A list answers slowly. A visited matrix answers in constant time.</p>
-            </article>
-            <article class="comic-panel dark-panel">
-              <span class="panel-index">3</span>
-              <p class="narration">The invariant</p>
-              <h3>Every move finds a new cell.</h3>
-              <p>At most <strong>m × n</strong> moves means <strong>O(mn)</strong> time.</p>
-            </article>
-          </div>
-        </div>
-
-        <div class="simulator-shell" aria-label="Directional grid simulator">
-          <div class="simulator-topline">
-            <div>
-              <p class="eyebrow">LIVE PANEL</p>
-              <h3>Directional Grid Simulator</h3>
+            <div class="simulator-shell" id="tree-simulator" aria-label="Colored tree orientation simulator" hidden>
+              <div class="simulator-topline"><div><p class="eyebrow">LIVE PANEL</p><h3>Edge Orientation Lab</h3></div><span class="complexity-pill">O(n)</span></div>
+              <div class="preset-tabs" role="group" aria-label="Tree example"><button class="preset active" type="button" data-tree-preset="valid">Valid tree</button><button class="preset" type="button" data-tree-preset="multiple">Two candidates</button><button class="preset" type="button" data-tree-preset="degree">Root degree 3</button></div>
+              <div class="tree-stage"><svg id="tree-canvas" viewBox="0 0 620 360" role="img" aria-label="Colored tree"></svg><aside class="state-card" aria-live="polite"><span>Orientation log</span><strong id="tree-status">Ready to inspect edges</strong><div class="indegree-list" id="indegree-list"></div></aside></div>
+              <div class="controls"><button class="button button-primary" id="tree-step" type="button">Orient next edge</button><button class="button button-ghost" id="tree-play" type="button">Auto play</button><button class="icon-button" id="tree-reset" type="button">↺ Reset</button></div><div class="result-banner" id="tree-result" aria-live="polite">Process every edge to reveal the root.</div>
             </div>
-            <span class="complexity-pill">O(mn)</span>
           </div>
-          <p class="sim-help">Click a cell to rotate its arrow. Then step through the path.</p>
-          <div class="grid-stage">
-            <div class="direction-grid" id="direction-grid" role="grid" aria-label="Editable direction grid"></div>
-            <aside class="state-card" aria-live="polite">
-              <span>Current state</span>
-              <strong id="grid-status">Ready at (0, 0)</strong>
-              <dl>
-                <div><dt>Current</dt><dd id="grid-current">(0, 0)</dd></div>
-                <div><dt>Visited</dt><dd id="grid-visited">0 / 4</dd></div>
-                <div><dt>Next move</dt><dd id="grid-next">Right</dd></div>
-              </dl>
-            </aside>
-          </div>
-          <div class="controls">
-            <button class="button button-primary" id="grid-step" type="button">Step forward</button>
-            <button class="button button-ghost" id="grid-play" type="button">Auto play</button>
-            <button class="icon-button" id="grid-reset" type="button" aria-label="Reset grid simulation">↺ Reset</button>
-          </div>
-          <div class="timeline" aria-label="Simulation progress"><span id="grid-progress"></span></div>
-        </div>
-      </section>
 
-      <section class="insight-break" aria-label="Key insight">
-        <span class="burst">AHA!</span>
-        <p>The best optimization often keeps the original idea and replaces one expensive lookup.</p>
-      </section>
-
-      <section class="lab lab-tree" id="tree-lab" aria-labelledby="tree-title">
-        <div class="lab-story">
-          <p class="chapter-tag">CHAPTER 02 · GRAPH ORIENTATION</p>
-          <h2 id="tree-title">The root with no incoming arrow</h2>
-          <p class="chapter-intro">
-            Trying every root repeats a full BFS. But the colors have already decided which way
-            every edge must point.
-          </p>
-          <div class="equation-card">
-            <span>COLOR LAW</span>
-            <strong><i class="dot red"></i> R → <i class="dot blue"></i> B → <i class="dot white"></i> W → R</strong>
-          </div>
-          <div class="proof-notes">
-            <article><span>01</span><div><h3>Orient once</h3><p>Different endpoint colors allow exactly one direction that follows the cycle.</p></div></article>
-            <article><span>02</span><div><h3>Count parents</h3><p>The root has indegree 0. Every other node must have indegree 1.</p></div></article>
-            <article><span>03</span><div><h3>Check binary</h3><p>Only the root needs a degree check; non-roots spend one edge on their parent.</p></div></article>
-          </div>
-        </div>
-
-        <div class="simulator-shell tree-simulator" aria-label="Colored tree orientation simulator">
-          <div class="simulator-topline">
-            <div>
-              <p class="eyebrow">LIVE PANEL</p>
-              <h3>Edge Orientation Lab</h3>
-            </div>
-            <span class="complexity-pill">O(n)</span>
-          </div>
-          <div class="preset-tabs" role="group" aria-label="Tree example">
-            <button class="preset active" type="button" data-tree-preset="valid">Valid tree</button>
-            <button class="preset" type="button" data-tree-preset="multiple">Two candidates</button>
-            <button class="preset" type="button" data-tree-preset="degree">Root degree 3</button>
-          </div>
-          <div class="tree-stage">
-            <svg id="tree-canvas" viewBox="0 0 620 360" role="img" aria-label="Colored tree"></svg>
-            <aside class="state-card" aria-live="polite">
-              <span>Orientation log</span>
-              <strong id="tree-status">Ready to inspect edges</strong>
-              <div class="indegree-list" id="indegree-list"></div>
-            </aside>
-          </div>
-          <div class="controls">
-            <button class="button button-primary" id="tree-step" type="button">Orient next edge</button>
-            <button class="button button-ghost" id="tree-play" type="button">Auto play</button>
-            <button class="icon-button" id="tree-reset" type="button" aria-label="Reset tree simulation">↺ Reset</button>
-          </div>
-          <div class="result-banner" id="tree-result" aria-live="polite">Process every edge to reveal the root.</div>
-        </div>
-      </section>
-
-      <section class="closing section-shell">
-        <p class="eyebrow">KEEP THE PATTERN</p>
-        <h2>Read it. Run it. Break it.<br />Then carry the insight forward.</h2>
-        <p>Every KatalCode editorial connects explanation, proof, tested code, and a visual model you can interrogate.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="https://github.com/KatalKavya96/KatalCode">Explore the repository ↗</a>
-          <a class="button button-ghost" href="#home">Back to top ↑</a>
+          <div class="chapter" data-chapter-panel="takeaways" hidden><div class="takeaway-grid" id="takeaway-grid"></div></div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <a class="brand footer-brand" href="#home"><span class="brand-mark">K</span><span><strong>KatalCode</strong><small>THINK. BREAK. OPTIMIZE.</small></span></a>
-      <p>Built as a living visual algorithm handbook by Kavya Katal.</p>
-      <p>© <span id="year">2026</span> Kavya Katal</p>
-    </footer>
+    <footer><a class="brand footer-brand" href="#home"><span class="brand-mark">K</span><span><strong>KatalCode</strong></span></a><p>© <span id="year">2026</span> Kavya Katal</p></footer>
   </body>
 </html>
