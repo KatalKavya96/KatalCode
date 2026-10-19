@@ -43,6 +43,7 @@ def run_tests() -> None:
 
 
 def validate_frontend() -> None:
+    run([sys.executable, str(ROOT / "scripts" / "build_solution_sources.py"), "--check"])
     parser = StrictEnoughHTMLParser()
     parser.feed((ROOT / "dist" / "index.html").read_text(encoding="utf-8"))
     required = (ROOT / "dist" / "styles.css", ROOT / "dist" / "app.js")
@@ -50,7 +51,8 @@ def validate_frontend() -> None:
         raise RuntimeError("Frontend assets are missing or empty")
     node = shutil.which("node")
     if node:
-        run([node, "--check", str(ROOT / "dist" / "app.js")])
+        for script in sorted((ROOT / "dist").glob("*.js")):
+            run([node, "--check", str(script)])
     print("Parsed frontend entry point and checked static assets")
 
 
