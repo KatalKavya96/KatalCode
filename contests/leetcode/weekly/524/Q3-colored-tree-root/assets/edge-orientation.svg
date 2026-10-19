@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="430" viewBox="0 0 820 430" role="img" aria-labelledby="title desc">
+  <title id="title">Colored tree with forced edge directions</title>
+  <desc id="desc">A red root points to two blue nodes. One blue node points to two white children. Indegrees are zero for the root and one for every other node.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#334155"/></marker>
+  </defs>
+  <rect width="820" height="430" rx="20" fill="#f8fafc"/>
+  <text x="40" y="45" font-family="system-ui, sans-serif" font-size="24" font-weight="700" fill="#0f172a">Colors force the parent → child direction</text>
+  <g fill="none" stroke="#334155" stroke-width="4" marker-end="url(#arrow)">
+    <path d="M390 132 L250 210"/>
+    <path d="M430 132 L570 210"/>
+    <path d="M230 270 L145 345"/>
+    <path d="M270 270 L355 345"/>
+  </g>
+  <g font-family="system-ui, sans-serif" text-anchor="middle">
+    <g><circle cx="410" cy="105" r="45" fill="#fee2e2" stroke="#dc2626" stroke-width="4"/><text x="410" y="113" font-size="26" font-weight="700" fill="#991b1b">R</text><text x="410" y="170" font-size="14" fill="#475569">in = 0 · root</text></g>
+    <g><circle cx="250" cy="240" r="45" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/><text x="250" y="248" font-size="26" font-weight="700" fill="#1e40af">B</text><text x="250" y="305" font-size="14" fill="#475569">in = 1 · degree 3</text></g>
+    <g><circle cx="570" cy="240" r="45" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/><text x="570" y="248" font-size="26" font-weight="700" fill="#1e40af">B</text><text x="570" y="305" font-size="14" fill="#475569">in = 1</text></g>
+    <g><circle cx="125" cy="370" r="38" fill="#f1f5f9" stroke="#64748b" stroke-width="4"/><text x="125" y="378" font-size="24" font-weight="700" fill="#334155">W</text></g>
+    <g><circle cx="375" cy="370" r="38" fill="#f1f5f9" stroke="#64748b" stroke-width="4"/><text x="375" y="378" font-size="24" font-weight="700" fill="#334155">W</text></g>
+  </g>
+  <g font-family="system-ui, sans-serif" font-size="14" fill="#475569">
+    <text x="55" y="414">The degree-3 blue node is valid: one parent edge leaves at most two child edges.</text>
+  </g>
+</svg>

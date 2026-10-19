@@ -1,0 +1,14 @@
+title: "Find Root of a Colored Tree"
+platform: "leetcode"
+problem_id: "4085"
+problem_url: "https://leetcode.com/problems/find-root-of-a-colored-tree/"
+difficulty: "medium"
+topics: [trees, graph-orientation, indegree, bfs]
+status: "complete"
+language: "python3"
+contest:
+  type: "weekly"
+  id: "524"
+canonical_editorial: "README.md"
+solution: "solution.py"
+tests: "tests.py"

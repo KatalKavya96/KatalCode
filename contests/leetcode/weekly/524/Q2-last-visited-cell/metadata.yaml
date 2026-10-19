@@ -1,0 +1,14 @@
+title: "Last Visited Cell in a Directional Grid"
+platform: "leetcode"
+problem_id: "4084"
+problem_url: "https://leetcode.com/problems/last-visited-cell-in-a-directional-grid/"
+difficulty: "medium"
+topics: [simulation, matrix]
+status: "complete"
+language: "python3"
+contest:
+  type: "weekly"
+  id: "524"
+canonical_editorial: "README.md"
+solution: "solution.py"
+tests: "tests.py"
