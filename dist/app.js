@@ -341,9 +341,11 @@ const platformGrid = document.querySelector("#platform-grid");
 const contestList = document.querySelector("#contest-list");
 const questionList = document.querySelector("#question-list");
 const searchInput = document.querySelector("#contest-search");
-const chapterTabs = [...document.querySelectorAll("[data-chapter]")];
-const chapterPanels = [...document.querySelectorAll("[data-chapter-panel]")];
 let activePlatform = "leetcode";
+let bookPages = [];
+let bookIndex = 0;
+let bookRoute = "";
+let bookProblem = null;
 
 function element(tag, className, content) {
   const node = document.createElement(tag);
@@ -371,6 +373,8 @@ function problemHref(platformId, contestId, problemId) {
 }
 
 function showView(name) {
+  stopGridPlayback();
+  stopTreePlayback();
   views.forEach((view) => { view.hidden = view.dataset.view !== name; });
 }
 
@@ -447,51 +451,152 @@ function renderContest(platformId, contest) {
   document.title = `${contest.title} · KatalCode`;
 }
 
-function selectChapter(chapter) {
-  chapterTabs.forEach((tab) => {
-    const selected = tab.dataset.chapter === chapter;
-    tab.classList.toggle("active", selected);
-    tab.setAttribute("aria-selected", String(selected));
+function solutionPages(problem) {
+  const sourcePath = problem.source.replace(/README\.md$/, "solution.py");
+  const source = window.KATALCODE_SOURCES[sourcePath];
+  const lines = source.trimEnd().split("\n");
+  let start = 0;
+  const codePages = problem.codeSteps.map((step, index) => {
+    const end = index === problem.codeSteps.length - 1 ? lines.length : step.end;
+    const page = { type: "code", title: step.title, body: step.explanation,
+      lines: lines.slice(start, end), firstLine: start + 1 };
+    start = end;
+    return page;
   });
-  chapterPanels.forEach((panel) => { panel.hidden = panel.dataset.chapterPanel !== chapter; });
+  return [
+    { type: "understand", title: "Understand the problem" },
+    { type: "approach", title: "Build the approach" },
+    ...codePages,
+    { type: "simulate", title: "Run the solution" },
+    { type: "recap", title: "Why it works" },
+  ];
 }
 
-function renderProblem(platformId, contest, problem) {
+// Render code as text nodes: source characters never become HTML.
+function highlightedLine(line) {
+  const fragment = document.createDocumentFragment();
+  const tokens = /(""".*?"""|"[^"\n]*"|'[^'\n]*'|#.*$|\b(?:class|def|return|if|elif|else|for|in|while|not|and|or|True|False|None|any|len|range)\b|\b\d+\b)/g;
+  let end = 0;
+  for (const match of line.matchAll(tokens)) {
+    fragment.append(document.createTextNode(line.slice(end, match.index)));
+    const token = match[0];
+    const style = token.startsWith("#") ? "comment" : /^["']/.test(token) ? "string" : /^\d/.test(token) ? "number" : "keyword";
+    fragment.append(element("span", `syntax-${style}`, token));
+    end = match.index + token.length;
+  }
+  fragment.append(document.createTextNode(line.slice(end)));
+  return fragment;
+}
+
+function renderBookPage(pageNumber) {
+  bookIndex = Math.min(Math.max(pageNumber - 1, 0), bookPages.length - 1);
+  const page = bookPages[bookIndex];
+  const content = document.querySelector("#book-content");
+  content.replaceChildren();
+  document.querySelector("#book-section").textContent = page.type === "code" ? "PYTHON · SOLUTION WALKTHROUGH" : "SOLUTION GUIDE";
+  document.querySelector("#book-page-title").textContent = page.title;
+  document.querySelector("#book-simulation").hidden = page.type !== "simulate";
+  const paragraph = (text, className = "") => content.append(element("p", className, text));
+  if (page.type === "understand") {
+    paragraph(bookProblem.summary);
+    paragraph(bookProblem.example, "book-example");
+    paragraph(bookProblem.intro);
+  } else if (page.type === "approach") {
+    bookProblem.panels.forEach(([label, title, body]) => {
+      const section = element("section", "approach-step");
+      section.append(element("p", "eyebrow", label), element("h3", "", title), element("p", "", body));
+      content.append(section);
+    });
+    paragraph(bookProblem.insight, "book-insight");
+  } else if (page.type === "code") {
+    paragraph(page.body);
+    const toolbar = element("div", "code-toolbar");
+    const copy = element("button", "copy-code", "Copy full solution");
+    copy.type = "button";
+    const status = element("span", "copy-status");
+    status.setAttribute("role", "status");
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.KATALCODE_SOURCES[bookProblem.source.replace(/README\.md$/, "solution.py")]);
+        status.textContent = "Copied";
+      } catch {
+        status.textContent = "Copy unavailable. Use the source link above.";
+      }
+    });
+    toolbar.append(element("span", "", `solution.py · lines ${page.firstLine}–${page.firstLine + page.lines.length - 1}`), copy, status);
+    content.append(toolbar);
+    const pre = element("pre", "solution-code");
+    pre.tabIndex = 0;
+    pre.setAttribute("aria-label", `Python source, lines ${page.firstLine} to ${page.firstLine + page.lines.length - 1}`);
+    const code = element("code");
+    page.lines.forEach((line, index) => {
+      const row = element("span", "code-line");
+      const number = element("span", "line-number", String(page.firstLine + index));
+      number.setAttribute("aria-hidden", "true");
+      const text = element("span", "line-text");
+      text.append(highlightedLine(line || " "));
+      row.append(number, text);
+      code.append(row);
+    });
+    pre.append(code);
+    content.append(pre);
+  } else if (page.type === "recap") {
+    paragraph(bookProblem.proof);
+    const list = element("ul", "book-takeaways");
+    bookProblem.takeaways.forEach((text) => list.append(element("li", "", text)));
+    content.append(list, link("button button-ghost", "Back to contest →", document.querySelector("#problem-back").href));
+  }
+  document.querySelector("#book-contents").value = String(bookIndex);
+  document.querySelector("#book-position").textContent = `${bookIndex + 1} / ${bookPages.length}`;
+  document.querySelector("#book-previous").disabled = bookIndex === 0;
+  document.querySelector("#book-next").disabled = bookIndex === bookPages.length - 1;
+  document.querySelector("#book-progress-fill").style.width = `${(bookIndex + 1) / bookPages.length * 100}%`;
+  const progress = document.querySelector(".book-progress");
+  progress.setAttribute("aria-valuenow", String(bookIndex + 1));
+  progress.setAttribute("aria-valuemax", String(bookPages.length));
+  document.title = `${page.title} · ${bookProblem.title} · KatalCode`;
+}
+
+function turnPage(index) {
+  if (index >= 0 && index < bookPages.length) window.location.hash = `${bookRoute}/page/${index + 1}`;
+}
+
+function renderProblem(platformId, contest, problem, pageNumber = 1) {
+  const sameBook = bookProblem === problem;
+  bookProblem = problem;
+  bookRoute = problemHref(platformId, contest.id, problem.id);
+  bookPages = solutionPages(problem);
   const platform = catalog[platformId];
   document.querySelector("#problem-back").href = contestHref(platformId, contest.id);
   document.querySelector("#problem-kicker").textContent = `${platform.name.toUpperCase()} ${problem.platformId} · ${contest.title.toUpperCase()} · ${problem.number}`;
   document.querySelector("#problem-title").textContent = problem.title;
   document.querySelector("#problem-summary").textContent = problem.summary;
   document.querySelector("#problem-difficulty").textContent = problem.difficulty;
-  document.querySelector("#source-editorial").href = `https://github.com/KatalKavya96/KatalCode/blob/main/${problem.source}`;
-  document.querySelector("#learn-title").textContent = problem.storyTitle;
-  document.querySelector("#learn-intro").textContent = problem.intro;
-  document.querySelector("#key-insight").textContent = problem.insight;
-  const sequence = document.querySelector("#comic-sequence");
-  sequence.replaceChildren();
-  problem.panels.forEach(([label, heading, body], index) => {
-    const panel = element("article", `comic-panel${index === 1 ? " accent-panel" : ""}${index === 2 ? " dark-panel" : ""}`);
-    panel.append(element("span", "panel-index", String(index + 1)), element("p", "narration", label), element("h3", "", heading), element("p", "", body));
-    sequence.append(panel);
-  });
-  const takeaways = document.querySelector("#takeaway-grid");
-  takeaways.replaceChildren();
-  problem.takeaways.forEach((takeaway, index) => {
-    const card = element("article", "takeaway-card");
-    card.append(element("span", "", String(index + 1).padStart(2, "0")), element("p", "", takeaway));
-    takeaways.append(card);
+  const sourceLink = document.querySelector("#source-editorial");
+  sourceLink.href = `https://github.com/KatalKavya96/KatalCode/blob/main/${problem.source.replace(/README\.md$/, "solution.py")}`;
+  sourceLink.textContent = "Source code ↗";
+  const contents = document.querySelector("#book-contents");
+  contents.replaceChildren();
+  bookPages.forEach((page, index) => {
+    const option = element("option", "", `${index + 1}. ${page.title}`);
+    option.value = String(index);
+    contents.append(option);
   });
   document.querySelector("#grid-simulator").hidden = problem.simulator !== "grid";
   document.querySelector("#tree-simulator").hidden = problem.simulator !== "tree";
   stopGridPlayback();
   stopTreePlayback();
-  selectChapter("learn");
   showView("problem");
-  document.title = `${problem.title} · KatalCode`;
+  renderBookPage(pageNumber);
+  if (sameBook) {
+    document.querySelector("#book-page-title").focus({ preventScroll: true });
+    document.querySelector(".book-toolbar").scrollIntoView({ block: "start", behavior: "instant" });
+  }
+  return sameBook;
 }
 
 function navigate() {
-  const hash = decodeURIComponent(window.location.hash.slice(1));
+  const hash = window.location.hash.slice(1);
   const parts = hash.split("/");
   const [page, platformId, contestId, problemId] = parts;
   const platform = catalog[platformId];
@@ -500,7 +605,9 @@ function navigate() {
 
   if (page === "platform" && platform && parts.length === 2) renderPlatform(platformId);
   else if (page === "contest" && contest && parts.length === 3) renderContest(platformId, contest);
-  else if (page === "problem" && problem && parts.length === 4) renderProblem(platformId, contest, problem);
+  else if (page === "problem" && problem && (parts.length === 4 || (parts.length === 6 && parts[4] === "page" && /^[1-9]\d*$/.test(parts[5])))) {
+    if (renderProblem(platformId, contest, problem, Number(parts[5]) || 1)) return;
+  }
   else {
     showView("home");
     document.title = "KatalCode — Visual Algorithm Archive";
@@ -516,6 +623,22 @@ document.querySelector(".skip-link").addEventListener("click", (event) => {
   document.querySelector("#content").focus();
 });
 searchInput.addEventListener("input", renderContestList);
-chapterTabs.forEach((tab) => tab.addEventListener("click", () => selectChapter(tab.dataset.chapter)));
+document.querySelector("#book-previous").addEventListener("click", () => turnPage(bookIndex - 1));
+document.querySelector("#book-next").addEventListener("click", () => turnPage(bookIndex + 1));
+document.querySelector("#book-contents").addEventListener("change", (event) => turnPage(Number(event.target.value)));
+document.querySelector("#reading-size").addEventListener("click", (event) => {
+  const enlarged = document.querySelector(".solution-book").classList.toggle("large-text");
+  event.currentTarget.setAttribute("aria-pressed", String(enlarged));
+  event.currentTarget.setAttribute("aria-label", enlarged ? "Use standard reading text size" : "Increase reading text size");
+  event.currentTarget.textContent = enlarged ? "Aa −" : "Aa +";
+});
+document.addEventListener("keydown", (event) => {
+  if (document.querySelector('[data-view="problem"]').hidden || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.target.closest("button, a, input, select, textarea, pre, [contenteditable]")) return;
+  if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+    event.preventDefault();
+    turnPage(bookIndex + (event.key === "ArrowRight" ? 1 : -1));
+  }
+});
 window.addEventListener("hashchange", navigate);
 navigate();

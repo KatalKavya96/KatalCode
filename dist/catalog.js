@@ -34,6 +34,13 @@ window.KATALCODE_CATALOG = {
             takeaways: ["Time: O(mn), because each cell is visited at most once.", "Space: O(mn) for the visited matrix.", "Check the proposed move before entering the next cell."],
             simulator: "grid",
             source: "contests/leetcode/weekly/524/Q2-last-visited-cell/README.md",
+            codeSteps: [
+              { end: 17, title: "Set up the walk", explanation: "Map each arrow to a row and column change. The visited matrix records every cell entered, and the walk starts at (0, 0)." },
+              { end: 23, title: "Read the next move", explanation: "Mark the current cell before calculating the next position. This ensures that a later move back to this cell is detected." },
+              { end: 29, title: "Check before moving", explanation: "Return the current position if the proposed move leaves the grid or revisits a cell. Otherwise, advance and repeat." },
+            ],
+            proof: "Before each move, the current cell is valid and every cell entered so far is marked. The two guards reject exactly the moves that must stop the walk. Every accepted move enters a new cell, so the simulation finishes after at most m × n visits.",
+            example: "On [[R, D], [U, L]], the path is (0, 0) → (0, 1) → (1, 1) → (1, 0). The next move would revisit (0, 0), so the answer is (1, 0). Try this same grid on the simulation page.",
           },
           {
             id: "q3-colored-tree-root",
@@ -54,6 +61,13 @@ window.KATALCODE_CATALOG = {
             takeaways: ["Time: O(n) to orient and inspect the edges.", "The unique root has indegree 0; every other node has indegree 1.", "The root must have degree at most 2; non-roots already have one parent."],
             simulator: "tree",
             source: "contests/leetcode/weekly/524/Q3-colored-tree-root/README.md",
+            codeSteps: [
+              { end: 12, title: "Record the color rule", explanation: "The repeating cycle R → B → W → R determines which endpoint can be the parent. Track each node’s total degree and number of incoming edges." },
+              { end: 24, title: "Orient every edge", explanation: "Count both endpoint degrees, then use the color cycle to choose the child. Equal colors cannot be adjacent in a valid rooted tree, so reject that case immediately." },
+              { end: 42, title: "Validate the root", explanation: "Require one node with no incoming edge and one incoming edge for every other node. The root can have at most two neighbors. Every non-root already uses one edge for its parent; the problem’s degree bound leaves at most two children." },
+            ],
+            proof: "For a tree satisfying the problem’s maximum-degree-three constraint, every edge direction is forced by its endpoint colors. A valid root must be the unique node with indegree zero; every other node must have one parent. These directions form the rooted tree. Non-roots have at most two children because one edge goes to their parent. Checking the root’s degree completes the binary-tree condition.",
+            example: "For edges [[0, 1], [0, 2]] and colors RBB, both arrows point away from node 0. Its indegree is 0 and its degree is 2, so node 0 is the root.",
           },
         ],
       },

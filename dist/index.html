@@ -8,6 +8,7 @@
     <title>KatalCode — Visual Algorithm Archive</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="./catalog.js" defer></script>
+    <script src="./solution-sources.js" defer></script>
     <script src="./app.js" defer></script>
   </head>
   <body>
@@ -53,14 +54,12 @@
         <div class="page-shell problem-shell">
           <a class="back-link" id="problem-back" href="#home">← Contest</a>
           <header class="problem-header"><div><p class="eyebrow" id="problem-kicker">LEETCODE 4084 · Q2</p><h1 id="problem-title">Last Visited Cell</h1><p id="problem-summary"></p></div><div class="problem-actions"><span class="difficulty" id="problem-difficulty">Medium</span><a class="button button-ghost" id="source-editorial" href="#">Read source ↗</a></div></header>
-          <nav class="chapter-nav" aria-label="Question sections"><button class="chapter-tab active" type="button" data-chapter="learn">Learn</button><button class="chapter-tab" type="button" data-chapter="simulate">Simulate</button><button class="chapter-tab" type="button" data-chapter="takeaways">Takeaways</button></nav>
-
-          <div class="chapter" data-chapter-panel="learn">
-            <div class="story-layout"><div><p class="chapter-tag">THE STORY</p><h2 id="learn-title">The maze that remembers</h2><p class="chapter-intro" id="learn-intro"></p></div><div class="comic-sequence" id="comic-sequence"></div></div>
-            <div class="insight-break"><span class="burst">AHA!</span><p id="key-insight"></p></div>
-          </div>
-
-          <div class="chapter" data-chapter-panel="simulate" hidden>
+          <div class="book-toolbar"><label for="book-contents">Contents</label><select id="book-contents" aria-label="Solution contents"></select><button id="reading-size" type="button" aria-label="Increase reading text size" aria-pressed="false">Aa +</button></div>
+          <div class="book-progress" role="progressbar" aria-label="Solution progress" aria-valuemin="1"><span id="book-progress-fill"></span></div>
+          <article class="solution-book" id="solution-book" aria-labelledby="book-page-title">
+            <p class="book-section" id="book-section"></p><h2 id="book-page-title" tabindex="-1"></h2>
+            <div id="book-content"></div>
+          <div id="book-simulation" hidden>
             <div class="simulator-shell" id="grid-simulator" aria-label="Directional grid simulator" hidden>
               <div class="simulator-topline"><div><p class="eyebrow">LIVE PANEL</p><h3>Directional Grid Simulator</h3></div><span class="complexity-pill">O(mn)</span></div><p class="sim-help">Click a cell to rotate its arrow. Then step through the path.</p>
               <div class="grid-stage"><div class="direction-grid" id="direction-grid" role="grid" aria-label="Editable direction grid"></div><aside class="state-card" aria-live="polite"><span>Current state</span><strong id="grid-status">Ready at (0, 0)</strong><dl><div><dt>Current</dt><dd id="grid-current">(0, 0)</dd></div><div><dt>Visited</dt><dd id="grid-visited">0 / 4</dd></div><div><dt>Next move</dt><dd id="grid-next">Right</dd></div></dl></aside></div>
@@ -73,8 +72,8 @@
               <div class="controls"><button class="button button-primary" id="tree-step" type="button">Orient next edge</button><button class="button button-ghost" id="tree-play" type="button">Auto play</button><button class="icon-button" id="tree-reset" type="button">↺ Reset</button></div><div class="result-banner" id="tree-result" aria-live="polite">Process every edge to reveal the root.</div>
             </div>
           </div>
-
-          <div class="chapter" data-chapter-panel="takeaways" hidden><div class="takeaway-grid" id="takeaway-grid"></div></div>
+          </article>
+          <nav class="book-navigation" aria-label="Solution pages"><button id="book-previous" type="button">← Previous</button><span id="book-position" role="status" aria-live="polite"></span><button id="book-next" type="button">Next →</button></nav>
         </div>
       </section>
     </main>

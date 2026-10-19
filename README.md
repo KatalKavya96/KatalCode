@@ -30,6 +30,8 @@ python3 -m http.server 8000 --directory dist
 
 Then open `http://localhost:8000`. GitHub Pages publishes `dist/`. For Vercel, import this repository with the repository root as the Root Directory; [`vercel.json`](./vercel.json) selects the static `dist/` output and the Other framework preset. No build command is needed.
 
+Solutions open as a phone- and tablet-friendly book: problem, approach, explained Python source pages, simulation, and proof. Previous/Next controls and the contents menu navigate the pages; the URL preserves the current page. The source pages use the actual solution files. After editing a solution, refresh the static source bundle with `python3 scripts/build_solution_sources.py`; repository validation checks that it stays current.
+
 ## Featured visual editorials
 
 <!-- INDEX:START -->
