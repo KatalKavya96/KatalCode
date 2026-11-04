@@ -6,16 +6,17 @@
     <meta name="description" content="KatalCode — a visual DSA and competitive programming archive." />
     <meta name="theme-color" content="#f7f1df" />
     <title>KatalCode — Visual Algorithm Archive</title>
-    <link rel="stylesheet" href="./styles.css?v=solution-book-1" />
-    <script src="./catalog.js?v=solution-book-1" defer></script>
-    <script src="./solution-sources.js?v=solution-book-1" defer></script>
-    <script src="./app.js?v=solution-book-1" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=compiler-1" />
+    <script src="./catalog.js?v=compiler-1" defer></script>
+    <script src="./solution-sources.js?v=compiler-1" defer></script>
+    <script src="./compiler.js?v=compiler-1" defer></script>
+    <script src="./app.js?v=compiler-1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
     <header class="topbar">
       <a class="brand" href="#home" aria-label="KatalCode home"><span class="brand-mark" aria-hidden="true">K</span><span><strong>KatalCode</strong><small>VISUAL ARCHIVE</small></span></a>
-      <nav aria-label="Primary navigation"><a href="#platform/leetcode">LeetCode</a><a href="#platform/codeforces">Codeforces</a><a href="#platform/codechef">CodeChef</a><a href="https://github.com/KatalKavya96/KatalCode">GitHub ↗</a></nav>
+      <nav aria-label="Primary navigation"><a href="#platform/leetcode">LeetCode</a><a href="#platform/codeforces">Codeforces</a><a href="#platform/codechef">CodeChef</a><a href="#compiler">Compiler</a><a href="https://github.com/KatalKavya96/KatalCode">GitHub ↗</a></nav>
     </header>
 
     <main id="content" tabindex="-1">
@@ -47,6 +48,14 @@
           <a class="back-link" id="contest-back" href="#home">← Platform archive</a>
           <div class="contest-heading"><p class="eyebrow" id="contest-kicker">LEETCODE · WEEKLY</p><h1 id="contest-title">Weekly Contest 524</h1><p id="contest-summary"></p><div class="contest-meta" id="contest-meta"></div></div>
           <div class="question-list" id="question-list"></div>
+        </div>
+      </section>
+
+      <section class="view compiler-view" data-view="compiler" hidden>
+        <div class="page-shell compiler-shell">
+          <a class="back-link" href="#home">← All platforms</a>
+          <div class="compiler-heading"><p class="eyebrow">PYTHON · JAVA · RUNS IN YOUR BROWSER</p><h1>Compiler</h1><p>Write code, type your own input, press Run. No test cases and no judge: keep the problem open on its original site, try your idea here, and check edge cases yourself.</p></div>
+          <div id="compiler-mount"></div>
         </div>
       </section>
 

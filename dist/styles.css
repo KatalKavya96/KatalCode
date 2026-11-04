@@ -174,6 +174,46 @@ h1, h2 { margin: 0; line-height: 1.02; }
 
 footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-top: 2px solid var(--ink); padding: 1.5rem clamp(1.2rem, 4vw, 4rem); background: var(--ink); color: white; }footer .brand-mark { color: var(--ink); }footer p { margin: 0; color: #d7d7d7; font-size: .76rem; }
 
+/* Compiler: editor, custom input, output. */
+.compiler-shell { max-width: 1100px; }
+.compiler-heading { padding-bottom: 1.5rem; }
+.compiler-heading h1 { font-family: var(--display); font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; text-transform: uppercase; }
+.compiler-heading > p:last-child { max-width: 700px; margin: .6rem 0 0; color: var(--muted); }
+.statement-link { margin: 0 0 1.25rem; font-family: var(--sans); }
+.kc-runner { margin-top: .5rem; border: 2px solid var(--ink); background: var(--surface); box-shadow: 4px 4px 0 var(--ink); font: 1rem/1.5 var(--sans); text-align: left; }
+.solution-book .kc-runner { box-shadow: none; }
+.kc-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem; border-bottom: 2px solid var(--ink); background: #f4f0e5; }
+.kc-tabs, .kc-actions { display: flex; gap: .4rem; }
+.kc-runner button { min-height: 40px; border: 2px solid var(--ink); padding: .35rem .8rem; background: var(--surface); color: var(--ink); font-size: .8rem; font-weight: 850; }
+.kc-runner button:disabled { opacity: .5; cursor: not-allowed; }
+.kc-tab[aria-pressed="true"] { background: var(--yellow); }
+.kc-runner .kc-run { background: var(--red); color: white; box-shadow: 2px 2px 0 var(--ink); }
+.kc-runner .kc-run:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 3px 3px 0 var(--ink); }
+.kc-runner .kc-stop { background: var(--ink); color: white; }
+.kc-ghost { border-color: var(--line) !important; }
+.kc-editor { display: grid; grid-template-columns: auto minmax(0, 1fr); height: clamp(260px, 45vh, 460px); background: #fbfaf6; font: .86rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.kc-gutter { overflow: hidden; min-width: 2.8em; padding: .75rem .55rem .75rem .4rem; border-right: 1px solid var(--line); color: #8a877e; text-align: right; white-space: pre; user-select: none; }
+.kc-code { width: 100%; height: 100%; margin: 0; padding: .75rem; border: 0; resize: none; background: transparent; color: #1d2433; font: inherit; tab-size: 4; white-space: pre; overflow: auto; }
+.kc-code:focus, .kc-stdin:focus { outline: 3px solid var(--blue); outline-offset: -3px; }
+.kc-io { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); }
+.kc-pane { display: flex; flex-direction: column; min-width: 0; }
+.kc-pane + .kc-pane { border-left: 2px solid var(--ink); }
+.kc-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem .6rem; padding: .5rem .75rem 0; color: var(--muted); font-size: .66rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.kc-status { letter-spacing: 0; text-transform: none; font-size: .78rem; font-weight: 800; }
+.kc-status.ok { color: var(--green); }
+.kc-status.bad { color: var(--red); }
+.kc-stdin, .kc-output { flex: 1; min-height: 150px; max-height: 340px; margin: 0; padding: .5rem .75rem .75rem; border: 0; background: transparent; color: var(--ink); font: .84rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; overflow: auto; }
+.kc-stdin { resize: vertical; }
+.kc-output.error { color: #b3261e; }
+.kc-note { margin: 0 !important; padding: .5rem .75rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; line-height: 1.5; }
+@media (max-width: 620px) {
+  .kc-io { grid-template-columns: 1fr; }
+  .kc-pane + .kc-pane { border-left: 0; border-top: 2px solid var(--ink); }
+  .solution-book .kc-runner { margin-left: -.5rem; margin-right: -.5rem; }
+  .kc-runner button { min-height: 44px; }
+  .kc-editor { height: 300px; font-size: .8rem; }
+}
+
 @media (max-width: 800px) {
   .platform-grid, .takeaway-grid { grid-template-columns: 1fr; }
   .platform-card { min-height: 180px; }

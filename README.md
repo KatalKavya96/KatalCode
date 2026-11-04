@@ -30,7 +30,21 @@ python3 -m http.server 8000 --directory dist
 
 Then open `http://localhost:8000`. GitHub Pages publishes `dist/`. For Vercel, import this repository with the repository root as the Root Directory; [`vercel.json`](./vercel.json) selects the static `dist/` output and the Other framework preset. No build command is needed.
 
-Solutions open as a phone- and tablet-friendly book: problem, approach, explained Python source pages, simulation, and proof. Previous/Next controls and the contents menu navigate the pages; the URL preserves the current page. The source pages use the actual solution files. After editing a solution, refresh the static source bundle with `python3 scripts/build_solution_sources.py`; repository validation checks that it stays current.
+Solutions open as a phone- and tablet-friendly book: problem, approach, a **Try it yourself** compiler page, explained Python source pages, simulation, and proof. Previous/Next controls and the contents menu navigate the pages; the URL preserves the current page. The source pages use the actual solution files. After editing a solution, refresh the static source bundle with `python3 scripts/build_solution_sources.py`; repository validation checks that it stays current.
+
+### Compiler
+
+The [Compiler](https://katalkavya96.github.io/KatalCode/#compiler) page, and the **Try it yourself** page in every solution book, give you an editor, a custom input box and a Run button for **Python 3** and **Java 17**. It has no test cases and no judge, on purpose: read the problem (each book links to the original statement), try an idea, and choose your own edge cases.
+
+Everything runs in the reader's browser, so there is no server to host, pay for, or abuse, and code never leaves the device:
+
+| | Python | Java |
+|---|---|---|
+| Engine | [Pyodide](https://pyodide.org) 314.0.7 (CPython 3.14, WebAssembly) in a Web Worker | [CheerpJ](https://cheerpj.com) 5.0 (OpenJDK 17, WebAssembly), free for personal and educational use |
+| First run | about 13 MB from jsDelivr, then cached | the JVM from CheerpJ's CDN, then cached; the first compile takes several seconds |
+| Limits | 10 s time limit, 100,000 characters of output | a stuck run needs a page reload |
+
+Drafts and input are saved in the browser's local storage, separately for each problem. The code lives in [`dist/compiler.js`](./dist/compiler.js) and [`dist/python-worker.mjs`](./dist/python-worker.mjs). A catalog entry's optional `problemUrl` adds the link to the original statement.
 
 ## Featured visual editorials
 
