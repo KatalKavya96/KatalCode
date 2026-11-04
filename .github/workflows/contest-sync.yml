@@ -1,0 +1,70 @@
+name: Contest sync
+
+# Daily. LeetCode weekly ends Sunday 04:00 UTC and biweekly Saturday 16:00 UTC; Codeforces and
+# CodeChef rounds vary. Ratings settle hours to days later, so a daily run catches everything.
+on:
+  schedule:
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: contest-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out LeetHub repository (optional)
+        if: ${{ vars.LEETHUB_REPO != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.LEETHUB_REPO }}
+          token: ${{ secrets.LEETHUB_TOKEN || github.token }}
+          path: .leethub
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sync public contest data
+        id: sync
+        continue-on-error: true # one platform failing should not block the others
+        env:
+          LEETCODE_HANDLE: ${{ vars.LEETCODE_HANDLE }}
+          CODEFORCES_HANDLE: ${{ vars.CODEFORCES_HANDLE }}
+          CODECHEF_HANDLE: ${{ vars.CODECHEF_HANDLE }}
+          LEETHUB_DIR: ${{ vars.LEETHUB_REPO != '' && '.leethub' || '' }}
+        run: python3 scripts/contest_sync/sync.py
+
+      - name: Validate repository
+        run: |
+          rm -rf .leethub
+          python3 scripts/validate_repo.py
+
+      - name: Open or update the sync pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: contest-sync
+          delete-branch: true
+          commit-message: "chore: sync contest results"
+          title: "chore: sync contest results"
+          body: |
+            Automated sync of public contest data from LeetCode, Codeforces and CodeChef.
+
+            New contests start as **Upsolve pending**, and new problem folders are drafts with my verbatim submission only. Write the editorial before treating a problem as done.
+
+      - name: Fail the run if a platform failed
+        if: ${{ steps.sync.outcome == 'failure' }}
+        run: |
+          echo "::error::At least one platform failed to sync. See the 'Sync public contest data' step log."
+          exit 1

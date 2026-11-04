@@ -1,0 +1,22 @@
+{
+  "username": "fixture-user",
+  "ranking": { "attendedContestsCount": 2, "rating": 1562.4, "globalRanking": 210345, "topPercentage": 42.1 },
+  "history": [
+    { "attended": false, "rating": 1500, "ranking": 0, "problemsSolved": 0, "totalProblems": 4, "finishTimeInSeconds": 0, "contest": { "title": "Weekly Contest 100", "startTime": 1700000000 } },
+    { "attended": true, "rating": 1531.2, "ranking": 8123, "problemsSolved": 2, "totalProblems": 4, "finishTimeInSeconds": 2710, "contest": { "title": "Biweekly Contest 50", "startTime": 1761402600 } },
+    { "attended": true, "rating": 1562.4, "ranking": 6050, "problemsSolved": 2, "totalProblems": 4, "finishTimeInSeconds": 4321, "contest": { "title": "Weekly Contest 200", "startTime": 1761445800 } }
+  ],
+  "recentAc": [
+    { "id": "3", "title": "Fixture C", "titleSlug": "fixture-c", "timestamp": "1761600000", "lang": "python3" },
+    { "id": "2", "title": "Fixture B", "titleSlug": "fixture-b", "timestamp": "1761447000", "lang": "java" },
+    { "id": "1", "title": "Fixture A", "titleSlug": "fixture-a", "timestamp": "1761446400", "lang": "python3" }
+  ],
+  "questions": {
+    "weekly-contest-200": [
+      { "title": "Fixture A", "slug": "fixture-a", "credit": 3 },
+      { "title": "Fixture B", "slug": "fixture-b", "credit": 4 },
+      { "title": "Fixture C", "slug": "fixture-c", "credit": 5 },
+      { "title": "Fixture D", "slug": "fixture-d", "credit": 6 }
+    ]
+  }
+}

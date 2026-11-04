@@ -1,0 +1,20 @@
+{
+  "handle": "fixture-user",
+  "info": { "rating": 1288, "maxRating": 1288, "rank": "pupil" },
+  "rating": [
+    { "contestId": 9001, "contestName": "Fixture Round 1 (Div. 3)", "rank": 4200, "ratingUpdateTimeSeconds": 1761500000, "oldRating": 0, "newRating": 1100 },
+    { "contestId": 9002, "contestName": "Fixture Round 2 (Div. 2)", "rank": 3100, "ratingUpdateTimeSeconds": 1761900000, "oldRating": 1100, "newRating": 1288 }
+  ],
+  "upsolves": [{ "contestId": 9002, "index": "C", "time": 1762000000 }],
+  "standings": {
+    "9002": {
+      "contest": { "id": 9002, "name": "Fixture Round 2 (Div. 2)", "startTimeSeconds": 1761890000, "durationSeconds": 7200 },
+      "problems": [{ "index": "A", "name": "Fixture A", "points": 500 }, { "index": "B", "name": "Fixture B", "points": 1000 }, { "index": "C", "name": "Fixture C", "points": 1500 }],
+      "row": { "rank": 3100, "results": [
+        { "points": 488, "rejectedAttemptCount": 0, "bestSubmissionTimeSeconds": 600 },
+        { "points": 900, "rejectedAttemptCount": 2, "bestSubmissionTimeSeconds": 3000 },
+        { "points": 0, "rejectedAttemptCount": 1 }
+      ] }
+    }
+  }
+}
