@@ -466,6 +466,7 @@ function solutionPages(problem) {
   return [
     { type: "understand", title: "Understand the problem" },
     { type: "approach", title: "Build the approach" },
+    { type: "practice", title: "Try it yourself" },
     ...codePages,
     { type: "simulate", title: "Run the solution" },
     { type: "recap", title: "Why it works" },
@@ -493,7 +494,7 @@ function renderBookPage(pageNumber) {
   const page = bookPages[bookIndex];
   const content = document.querySelector("#book-content");
   content.replaceChildren();
-  document.querySelector("#book-section").textContent = page.type === "code" ? "PYTHON · SOLUTION WALKTHROUGH" : "SOLUTION GUIDE";
+  document.querySelector("#book-section").textContent = page.type === "code" ? "PYTHON · SOLUTION WALKTHROUGH" : page.type === "practice" ? "PRACTICE · PYTHON OR JAVA" : "SOLUTION GUIDE";
   document.querySelector("#book-page-title").textContent = page.title;
   document.querySelector("#book-simulation").hidden = page.type !== "simulate";
   const paragraph = (text, className = "") => content.append(element("p", className, text));
@@ -501,6 +502,7 @@ function renderBookPage(pageNumber) {
     paragraph(bookProblem.summary);
     paragraph(bookProblem.example, "book-example");
     paragraph(bookProblem.intro);
+    if (bookProblem.problemUrl) content.append(statementLink());
   } else if (page.type === "approach") {
     bookProblem.panels.forEach(([label, title, body]) => {
       const section = element("section", "approach-step");
@@ -508,6 +510,10 @@ function renderBookPage(pageNumber) {
       content.append(section);
     });
     paragraph(bookProblem.insight, "book-insight");
+  } else if (page.type === "practice") {
+    paragraph("Before reading the code, try it yourself. Turn the example into input, predict the output out loud, then run your version. Nothing here is judged, so pick your own edge cases too.");
+    if (bookProblem.problemUrl) content.append(statementLink());
+    window.KatalCompiler.mount(content, { key: bookRoute.slice(1) });
   } else if (page.type === "code") {
     paragraph(page.body);
     const toolbar = element("div", "code-toolbar");
@@ -557,12 +563,30 @@ function renderBookPage(pageNumber) {
   document.title = `${page.title} · ${bookProblem.title} · KatalCode`;
 }
 
+function statementLink() {
+  const anchor = link("button button-ghost statement-link", `Read the full statement on ${catalog[activePlatform].name} ↗`, bookProblem.problemUrl);
+  anchor.target = "_blank";
+  anchor.rel = "noopener";
+  return anchor;
+}
+
+let compilerMounted = false;
+function renderCompiler() {
+  if (!compilerMounted) {
+    window.KatalCompiler.mount(document.querySelector("#compiler-mount"), { key: "scratch" });
+    compilerMounted = true;
+  }
+  showView("compiler");
+  document.title = "Compiler · KatalCode";
+}
+
 function turnPage(index) {
   if (index >= 0 && index < bookPages.length) window.location.hash = `${bookRoute}/page/${index + 1}`;
 }
 
 function renderProblem(platformId, contest, problem, pageNumber = 1) {
   const sameBook = bookProblem === problem;
+  activePlatform = platformId;
   bookProblem = problem;
   bookRoute = problemHref(platformId, contest.id, problem.id);
   bookPages = solutionPages(problem);
@@ -603,7 +627,8 @@ function navigate() {
   const contest = platform?.contests.find((item) => item.id === contestId);
   const problem = contest?.problems.find((item) => item.id === problemId);
 
-  if (page === "platform" && platform && parts.length === 2) renderPlatform(platformId);
+  if (page === "compiler" && parts.length === 1) renderCompiler();
+  else if (page === "platform" && platform && parts.length === 2) renderPlatform(platformId);
   else if (page === "contest" && contest && parts.length === 3) renderContest(platformId, contest);
   else if (page === "problem" && problem && (parts.length === 4 || (parts.length === 6 && parts[4] === "page" && /^[1-9]\d*$/.test(parts[5])))) {
     if (renderProblem(platformId, contest, problem, Number(parts[5]) || 1)) return;
