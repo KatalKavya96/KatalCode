@@ -1,0 +1,9 @@
+{
+  "handle": "fixture-user",
+  "rating": 1450,
+  "stars": "2★",
+  "history": [
+    { "code": "START200D", "name": "Starters 200 (Rated)", "end_date": "2026-10-29 22:00:00", "rating": "1450", "rank": "2345" },
+    { "code": "START199D", "name": "Starters 199 (Rated)", "end_date": "2026-10-22 22:00:00", "rating": "1400", "rank": "3456" }
+  ]
+}

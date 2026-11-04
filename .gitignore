@@ -21,3 +21,4 @@ Thumbs.db
 
 build/
 site-workflow-*.tar.gz
+.leethub/

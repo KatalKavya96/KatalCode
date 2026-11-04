@@ -6,7 +6,7 @@
 
 **DSA • Algorithms • LeetCode • Competitive Programming • Visual Editorials**
 
-[Visual Lab](https://katalkavya96.github.io/KatalCode/) · [Contest archive](./contests/) · [Topic guides](./topics/) · [Editorial workflow](./docs/learning-workflow.md)
+[Visual Lab](https://katalkavya96.github.io/KatalCode/) · [Contest archive](./contests/) · [Topic guides](./topics/) · [Editorial workflow](./docs/learning-workflow.md) · [Contest sync](./docs/contest-sync.md)
 
 </div>
 
